@@ -5,18 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Некрополь — true crime кладбище</title>
 
-    <!-- Подключаем шрифты из Google -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
-        /* Сбрасываю стандартные отступы у всех элементов */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Задаю тёмный фон для всей страницы */
         body {
             background-color: #0a0a0a;
             color: #d0d0d0;
@@ -28,13 +25,13 @@
             padding: 20px;
         }
 
-        /* Основной контейнер, чтобы контент не растягивался слишком широко */
+     
         .main-container {
             max-width: 900px;
             width: 100%;
         }
 
-        /* Заголовок сайта — крупный, с засечками */
+
         .site-title {
             font-family: 'Playfair Display', serif;
             font-size: 4rem;
@@ -44,7 +41,7 @@
             margin: 30px 0 20px;
         }
 
-        /* Подзаголовок под названием */
+     
         .subtitle {
             text-align: center;
             color: #666;
@@ -53,12 +50,11 @@
             letter-spacing: 2px;
         }
 
-        /* Каждая секция (аллея) */
         .section {
             margin-bottom: 50px;
         }
 
-        /* Заголовок секции с лилиями по бокам */
+
         .section-title {
             font-family: 'Playfair Display', serif;
             font-size: 2rem;
@@ -73,7 +69,6 @@
             gap: 18px;
         }
 
-        /* Декоративные лилии */
         .lilies {
             color: #fff;
             font-size: 2rem;
@@ -81,14 +76,13 @@
             user-select: none;
         }
 
-        /* Сетка для карточек — колонки автоматически подбираются */
         .plots-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
         }
 
-        /* Одна карточка с преступником или катастрофой */
+     
         .plot-card {
             border: 1px solid #2a2a2a;
             background: #0f0f0f;
@@ -98,14 +92,13 @@
             text-align: center;
         }
 
-        /* При наведении карточка чуть приподнимается и подсвечивается */
         .plot-card:hover {
             border-color: #555;
             background: #141414;
             transform: translateY(-3px);
         }
 
-        /* Мини-могилки внутри карточки */
+  
         .plot-card .mini-graves {
             display: flex;
             justify-content: center;
@@ -116,7 +109,7 @@
             overflow: hidden;
         }
 
-        /* Одна мини-могилка */
+    
         .mini-grave {
             width: 16px;
             height: 20px;
@@ -124,7 +117,6 @@
             opacity: 0.8;
         }
 
-        /* Имя в карточке */
         .plot-name {
             font-family: 'Playfair Display', serif;
             font-size: 1.4rem;
@@ -132,13 +124,11 @@
             margin: 10px 0;
         }
 
-        /* Число жертв */
         .plot-victims {
             font-size: 1.2rem;
             color: #999;
         }
 
-        /* Тип: маньяк или катастрофа */
         .plot-type {
             font-size: 0.7rem;
             color: #555;
@@ -146,7 +136,6 @@
             margin-top: 5px;
         }
 
-        /* Затемнение и попап с подробностями */
         .overlay {
             display: none;
             position: fixed;
@@ -162,12 +151,10 @@
             padding: 20px;
         }
 
-        /* Показываю оверлей, когда добавляю класс active */
         .overlay.active {
             display: flex;
         }
 
-        /* Белый блок с подробностями внутри оверлея */
         .tomb-detail {
             max-width: 700px;
             width: 100%;
@@ -178,7 +165,6 @@
             margin: 20px 0;
         }
 
-        /* Фотография-портрет круглая, чёрно-белая */
         .portrait {
             width: 150px;
             height: 150px;
@@ -189,7 +175,6 @@
             background-color: #1a1a1a;
         }
 
-        /* Имя внутри попапа */
         .detail-name {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
@@ -197,13 +182,11 @@
             margin: 20px 0 5px;
         }
 
-        /* Даты */
         .detail-dates {
             color: #999;
             margin-bottom: 25px;
         }
 
-        /* Сетка с могильными плитами (10 в ряд) */
         .grave-grid {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
@@ -212,7 +195,6 @@
             max-width: 500px;
         }
 
-        /* Одна могилка с анимацией появления */
         .grave {
             display: flex;
             justify-content: center;
@@ -221,7 +203,6 @@
             animation: fadeIn 0.3s ease forwards;
         }
 
-        /* Анимация: плавное появление и увеличение */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -233,14 +214,12 @@
             }
         }
 
-        /* SVG-иконка могилки */
         .grave svg {
             width: 24px;
             height: 30px;
             fill: #fff;
         }
 
-        /* Эпитафия курсивом */
         .detail-epitaph {
             font-family: 'Playfair Display', serif;
             font-size: 1.2rem;
@@ -249,7 +228,6 @@
             line-height: 1.6;
         }
 
-        /* Описание */
         .detail-description {
             font-family: 'Roboto Mono', monospace;
             font-size: 0.85rem;
@@ -260,7 +238,6 @@
             padding: 0 10px;
         }
 
-        /* Кнопка закрытия */
         .close-btn {
             background: none;
             border: 1px solid #444;
@@ -278,7 +255,6 @@
             color: #fff;
         }
 
-        /* Адаптив для телефонов: могилки в 5 колонок, заголовок меньше */
         @media (max-width: 600px) {
             .grave-grid {
                 grid-template-columns: repeat(5, 1fr);
@@ -288,7 +264,6 @@
             }
         }
 
-        /* ---------- ЗАСТАВКА ---------- */
         #preloader {
             position: fixed;
             top: 0;
@@ -304,7 +279,6 @@
             cursor: pointer;
         }
 
-        /* Текст на заставке */
         .preloader-text {
             font-family: 'Playfair Display', serif;
             color: #fff;
@@ -319,7 +293,6 @@
             border-color: #fff;
         }
 
-        /* Подсказка под текстом */
         .preloader-hint {
             color: #666;
             margin-top: 15px;
@@ -330,23 +303,19 @@
 </head>
 <body>
 
-    <!-- Заставка, которую видит пользователь при заходе на сайт -->
     <div id="preloader" onclick="hidePreloader()">
         <div class="preloader-text">ВОЙТИ В НЕКРОПОЛЬ</div>
         <div class="preloader-hint">нажмите, чтобы продолжить</div>
     </div>
 
-    <!-- Фоновая музыка (начнёт играть после нажатия на заставку) -->
     <audio id="bgMusic" loop>
         <source src="StabatMater.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Основной контент сайта (изначально скрыт) -->
     <div id="mainPage" class="main-container" style="display:none;">
         <div class="site-title">НЕКРОПОЛЬ</div>
         <div class="subtitle">архив памяти жертв</div>
 
-        <!-- Секция с маньяками -->
         <div class="section">
             <div class="section-title">
                 <span class="lilies">⚜ ⚜</span> Аллея Маньяков <span class="lilies">⚜ ⚜</span>
@@ -354,7 +323,6 @@
             <div class="plots-grid" id="maniacsGrid"></div>
         </div>
 
-        <!-- Секция с катастрофами -->
         <div class="section">
             <div class="section-title">
                 <span class="lilies">⚜ ⚜</span> Аллея Катастроф <span class="lilies">⚜ ⚜</span>
@@ -362,64 +330,43 @@
             <div class="plots-grid" id="disastersGrid"></div>
         </div>
 
-        <!-- Подвал с общим числом жертв -->
         <div style="text-align:center; color:#444; margin-top:40px;">
             Здесь покоится память о <span id="totalVictims" style="color:#aaa; font-weight:bold;"></span> жертвах
         </div>
     </div>
 
-    <!-- Оверлей — всплывающее окно с подробностями -->
     <div id="overlay" class="overlay" onclick="closeDetailOutside(event)">
         <div class="tomb-detail">
-            <!-- Портрет -->
             <img id="detailPortrait" class="portrait" src="" alt="портрет">
-            <!-- Имя -->
             <div id="detailName" class="detail-name"></div>
-            <!-- Даты -->
             <div id="detailDates" class="detail-dates"></div>
-            <!-- Сетка с могильными плитами -->
             <div id="graveContainer" class="grave-grid"></div>
-            <!-- Эпитафия -->
             <div id="detailEpitaph" class="detail-epitaph"></div>
-            <!-- Описание -->
             <div id="detailDescription" class="detail-description"></div>
-            <!-- Кнопка закрыть -->
             <button class="close-btn" onclick="closeDetail()">← НА КЛАДБИЩЕ</button>
         </div>
     </div>
 
     <script>
-        // ================== ЗАСТАВКА И МУЗЫКА ==================
-
-        // Получаю элементы со страницы
         var preloaderDiv = document.getElementById('preloader');
         var bgMusicTag = document.getElementById('bgMusic');
         var mainPageDiv = document.getElementById('mainPage');
 
-        // Функция, которая прячет заставку и запускает музыку
         function hidePreloader() {
-            // Ставлю громкость на максимум
             bgMusicTag.volume = 1;
 
-            // Пробую запустить музыку
             bgMusicTag.play().then(function() {
                 console.log('Музыка успешно заиграла');
             }).catch(function(err) {
                 console.error('Ошибка воспроизведения:', err);
             });
 
-            // Скрываю заставку
             preloaderDiv.style.display = 'none';
-            // Показываю основной контент
             mainPageDiv.style.display = 'block';
 
-            // Строю карточки на странице
             buildMainPage();
         }
 
-        // ================== ДАННЫЕ О ПРЕСТУПНИКАХ И КАТАСТРОФАХ ==================
-
-        // Создаю массив со всеми записями
         var graves = [
             {
                 id: 1,
@@ -543,23 +490,18 @@
             }
         ];
 
-        // ================== SVG-КОД МОГИЛЬНЫХ ПЛИТ ==================
-
-        // Большая могильная плита для оверлея
         var graveSVG = '<svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">' +
             '<rect x="4" y="4" width="16" height="24" rx="6" ry="6" fill="none" stroke="#fff" stroke-width="1.5"/>' +
             '<line x1="12" y1="10" x2="12" y2="24" stroke="#fff" stroke-width="1.5"/>' +
             '<line x1="6" y1="16" x2="18" y2="16" stroke="#fff" stroke-width="1.5"/>' +
             '</svg>';
 
-        // Маленькая могильная плита для карточек
         var miniGraveSVG = '<svg viewBox="0 0 16 22" xmlns="http://www.w3.org/2000/svg">' +
             '<rect x="2" y="2" width="12" height="18" rx="4" ry="4" fill="none" stroke="#fff" stroke-width="1.2"/>' +
             '<line x1="8" y1="6" x2="8" y2="16" stroke="#fff" stroke-width="1.2"/>' +
             '<line x1="4" y1="10" x2="12" y2="10" stroke="#fff" stroke-width="1.2"/>' +
             '</svg>';
 
-        // ================== ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ СО СТРАНИЦЫ ==================
 
         var maniacsGrid = document.getElementById('maniacsGrid');
         var disastersGrid = document.getElementById('disastersGrid');
@@ -572,15 +514,12 @@
         var detailEpitaph = document.getElementById('detailEpitaph');
         var detailDescription = document.getElementById('detailDescription');
 
-        // ================== ПОСТРОЕНИЕ КАРТОЧЕК НА ГЛАВНОЙ ==================
 
         function buildMainPage() {
-            // Сортирую записи: сначала маньяки, потом катастрофы
             var maniacs = [];
             var disasters = [];
             var totalVictims = 0;
 
-            // Прохожу по всем записям и раскидываю их по типам
             for (var i = 0; i < graves.length; i++) {
                 var grave = graves[i];
                 if (grave.type === 'maniac') {
@@ -590,25 +529,19 @@
                 }
             }
 
-            // Функция, которая отрисовывает карточки в нужном контейнере
             function renderCards(array, container) {
-                // Очищаю контейнер на всякий случай
                 container.innerHTML = '';
 
-                // Перебираю все записи в массиве
                 for (var j = 0; j < array.length; j++) {
                     var grave = array[j];
                     totalVictims = totalVictims + grave.victims;
 
-                    // Создаю элемент карточки
                     var card = document.createElement('div');
                     card.className = 'plot-card';
 
-                    // Вешаю обработчик клика (открытие подробностей)
                     card.setAttribute('data-id', grave.id);
                     card.onclick = function() {
                         var clickedId = parseInt(this.getAttribute('data-id'));
-                        // Ищу запись по id
                         var foundGrave = null;
                         for (var k = 0; k < graves.length; k++) {
                             if (graves[k].id === clickedId) {
@@ -621,72 +554,58 @@
                         }
                     };
 
-                    // Считаю, сколько мини-могилок показывать (не больше 20)
                     var previewCount = grave.victims;
                     if (previewCount > 20) {
                         previewCount = 20;
                     }
 
-                    // Собираю HTML для мини-могилок
                     var miniGravesHTML = '';
                     for (var m = 0; m < previewCount; m++) {
                         miniGravesHTML = miniGravesHTML + '<span class="mini-grave">' + miniGraveSVG + '</span>';
                     }
 
-                    // Если жертв больше 20, добавляю "+N"
                     if (grave.victims > 20) {
                         miniGravesHTML = miniGravesHTML + '<span style="color:#666; margin-left:5px;">+' + (grave
                             .victims - 20) + '</span>';
                     }
 
-                    // Определяю текст типа
                     var typeText = 'МАНЬЯК';
                     if (grave.type === 'disaster') {
                         typeText = 'КАТАСТРОФА';
                     }
 
-                    // Собираю всю карточку
                     card.innerHTML =
                         '<div class="mini-graves">' + miniGravesHTML + '</div>' +
                         '<div class="plot-name">' + grave.name + '</div>' +
                         '<div class="plot-victims">' + grave.victims + ' жертв</div>' +
                         '<div class="plot-type">' + typeText + '</div>';
 
-                    // Добавляю карточку в контейнер
                     container.appendChild(card);
                 }
             }
 
-            // Отрисовываю маньяков и катастрофы
             renderCards(maniacs, maniacsGrid);
             renderCards(disasters, disastersGrid);
 
-            // Вывожу общее число жертв
             totalVictimsSpan.textContent = totalVictims;
         }
 
-        // ================== ОТКРЫТИЕ ПОДРОБНОСТЕЙ ==================
 
         function openDetail(grave) {
-            // Ставлю картинку-портрет
             detailPortrait.src = grave.portrait;
 
-            // Если картинка не загрузится, показываю заглушку
             detailPortrait.onerror = function() {
                 this.src =
                     'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150"%3E%3Crect width="150" height="150" fill="%231a1a1a"/%3E%3Ctext x="50%25" y="50%25" fill="%23555" font-family="monospace" text-anchor="middle" dy=".3em" font-size="12"%3EНЕТ ФОТО%3C/text%3E%3C/svg%3E';
             };
 
-            // Заполняю текстовые поля
             detailName.textContent = grave.name;
             detailDates.textContent = grave.dates;
             detailEpitaph.textContent = grave.epitaph;
             detailDescription.textContent = grave.description;
 
-            // Очищаю контейнер с могилками
             graveContainer.innerHTML = '';
 
-            // Определяю, сколько могилок рисовать (максимум 200)
             var victims = grave.victims;
             var maxGravesDisplay = 200;
             var gravesToShow = victims;
@@ -694,20 +613,17 @@
                 gravesToShow = maxGravesDisplay;
             }
 
-            // Рисую могилки по одной
             for (var i = 0; i < gravesToShow; i++) {
                 var graveDiv = document.createElement('div');
                 graveDiv.className = 'grave';
                 graveDiv.innerHTML = graveSVG;
 
-                // Задержка анимации для каждой могилки
                 var delay = i * 0.015;
                 graveDiv.style.animationDelay = delay + 's';
 
                 graveContainer.appendChild(graveDiv);
             }
 
-            // Если жертв больше 200, показываю сообщение
             if (victims > maxGravesDisplay) {
                 var extra = document.createElement('div');
                 extra.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #666; margin-top: 10px;';
@@ -715,15 +631,11 @@
                 graveContainer.appendChild(extra);
             }
 
-            // Показываю оверлей
             overlay.classList.add('active');
-            // Запрещаю скролл на фоне
             document.body.style.overflow = 'hidden';
-            // Прокручиваю оверлей наверх
             overlay.scrollTop = 0;
         }
 
-        // ================== ЗАКРЫТИЕ ОВЕРЛЕЯ ==================
 
         function closeDetail() {
             // Скрываю оверлей
@@ -732,17 +644,13 @@
             document.body.style.overflow = '';
         }
 
-        // Закрытие при клике на тёмный фон (вне белого блока)
         function closeDetailOutside(event) {
-            // Если кликнули именно по оверлею, а не по блоку внутри
             if (event.target === overlay) {
                 closeDetail();
             }
         }
 
-        // Закрытие по клавише Escape
         document.addEventListener('keydown', function(event) {
-            // Проверяю, что нажата клавиша Escape и оверлей открыт
             if (event.key === 'Escape' && overlay.classList.contains('active')) {
                 closeDetail();
             }
