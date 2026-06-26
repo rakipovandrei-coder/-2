@@ -1,2 +1,481 @@
-# -2
-дз по медиадизайну
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Некрополь — true crime кладбище</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #0a0a0a;
+            color: #d0d0d0;
+            font-family: 'Roboto Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .main-container { max-width: 900px; width: 100%; }
+        .site-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: #fff;
+            text-align: center;
+            letter-spacing: 5px;
+            margin: 30px 0 20px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+        .section { margin-bottom: 50px; }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #bbb;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+        }
+        .lilies {
+            color: #fff;
+            font-size: 2rem;
+            line-height: 1;
+            user-select: none;
+        }
+        .plots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .plot-card {
+            border: 1px solid #2a2a2a;
+            background: #0f0f0f;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .plot-card:hover {
+            border-color: #555;
+            background: #141414;
+            transform: translateY(-3px);
+        }
+        .plot-card .mini-graves {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin: 15px 0;
+            max-height: 48px;
+            overflow: hidden;
+        }
+        .mini-grave { width: 16px; height: 20px; fill: #fff; opacity: 0.8; }
+        .plot-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: #fff;
+            margin: 10px 0;
+        }
+        .plot-victims { font-size: 1.2rem; color: #999; }
+        .plot-type {
+            font-size: 0.7rem;
+            color: #555;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 100;
+            overflow-y: auto;
+            justify-content: center;
+            align-items: start;
+            padding: 20px;
+        }
+        .overlay.active { display: flex; }
+        .tomb-detail {
+            max-width: 700px;
+            width: 100%;
+            border: 1px solid #2a2a2a;
+            background: #0a0a0a;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .portrait {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            filter: grayscale(100%) contrast(1.2);
+            border: 2px solid #3a3a3a;
+            background-color: #1a1a1a;
+        }
+        .detail-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #fff;
+            margin: 20px 0 5px;
+        }
+        .detail-dates { color: #999; margin-bottom: 25px; }
+        .grave-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 6px;
+            margin: 30px auto;
+            max-width: 500px;
+        }
+        .grave {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.3); }
+            to { opacity: 0.9; transform: scale(1); }
+        }
+        .grave svg { width: 24px; height: 30px; fill: #fff; }
+        .detail-epitaph {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: #bbb;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        .detail-description {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.85rem;
+            color: #999;
+            line-height: 1.7;
+            text-align: left;
+            margin-top: 25px;
+            padding: 0 10px;
+        }
+        .close-btn {
+            background: none;
+            border: 1px solid #444;
+            color: #aaa;
+            padding: 10px 25px;
+            font-family: 'Roboto Mono', monospace;
+            cursor: pointer;
+            margin-top: 25px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .close-btn:hover { border-color: #fff; color: #fff; }
+        @media (max-width: 600px) {
+            .grave-grid { grid-template-columns: repeat(5, 1fr); }
+            .site-title { font-size: 2.5rem; }
+        }
+
+        /* Заставка */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #0a0a0a;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .preloader-text {
+            font-family: 'Playfair Display', serif;
+            color: #fff;
+            font-size: 2rem;
+            letter-spacing: 3px;
+            border: 1px solid #333;
+            padding: 20px 40px;
+            transition: 0.3s;
+        }
+        .preloader-text:hover { border-color: #fff; }
+        .preloader-hint {
+            color: #666;
+            margin-top: 15px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.7rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Заставка -->
+    <div id="preloader">
+        <div class="preloader-text">ВОЙТИ В НЕКРОПОЛЬ</div>
+        <div class="preloader-hint">нажмите, чтобы продолжить</div>
+    </div>
+
+    <!-- Фоновая музыка -->
+    <audio id="bgMusic" loop>
+        <source src="StabatMater.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Основной контент (скрыт за заставкой) -->
+    <div id="mainPage" class="main-container" style="display:none;">
+        <div class="site-title">НЕКРОПОЛЬ</div>
+        <div class="subtitle">архив памяти жертв</div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="lilies">⚜ ⚜</span> Аллея Маньяков <span class="lilies">⚜ ⚜</span>
+            </div>
+            <div class="plots-grid" id="maniacsGrid"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="lilies">⚜ ⚜</span> Аллея Катастроф <span class="lilies">⚜ ⚜</span>
+            </div>
+            <div class="plots-grid" id="disastersGrid"></div>
+        </div>
+
+        <div style="text-align:center; color:#444; margin-top:40px;">
+            Здесь покоится память о <span id="totalVictims" style="color:#aaa; font-weight:bold;"></span> жертвах
+        </div>
+    </div>
+
+    <!-- Оверлей -->
+    <div id="overlay" class="overlay">
+        <div class="tomb-detail">
+            <img id="detailPortrait" class="portrait" src="" alt="портрет">
+            <div id="detailName" class="detail-name"></div>
+            <div id="detailDates" class="detail-dates"></div>
+            <div id="graveContainer" class="grave-grid"></div>
+            <div id="detailEpitaph" class="detail-epitaph"></div>
+            <div id="detailDescription" class="detail-description"></div>
+            <button id="closeOverlay" class="close-btn">← НА КЛАДБИЩЕ</button>
+        </div>
+    </div>
+
+    <script>
+        // ================== ЗАСТАВКА И ЗАПУСК МУЗЫКИ ==================
+        const preloader = document.getElementById('preloader');
+        const bgMusic = document.getElementById('bgMusic');
+        const mainPage = document.getElementById('mainPage');
+
+        preloader.addEventListener('click', () => {
+            // Запускаем музыку с громкостью 1 (полная)
+            bgMusic.volume = 1;
+            bgMusic.play().then(() => {
+                console.log('Музыка успешно заиграла');
+            }).catch(err => {
+                console.error('Ошибка воспроизведения:', err);
+            });
+            // Прячем заставку и показываем основной контент
+            preloader.style.display = 'none';
+            mainPage.style.display = 'block';
+            // Инициализируем карточки после показа страницы
+            buildMainPage();
+        });
+
+        // ================== БАЗА ДАННЫХ ==================
+        const graves = [
+            {
+                id: 1, type: 'maniac', name: 'Андрей Чикатило', victims: 52,
+                dates: '16.10.1936 — 14.02.1994', epitaph: 'Ростовский потрошитель',
+                description: `Андрей Чикатило — один из самых известных советских серийных убийц, известный как «Ростовский потрошитель». С 1978 по 1990 год он жестоко убил не менее 52 человек, в основном женщин и детей, часто нанося десятки ножевых ранений и вырезая органы. Его поиски стали одним из самых масштабных расследований в истории СССР, а самого маньяка долго не могли поймать из-за ошибок следствия. В 1992 году Чикатило был приговорён к смертной казни и расстрелян в 1994 году.`,
+                portrait: 'Чикатило.jpg'
+            },
+            {
+                id: 2, type: 'maniac', name: 'Александр Пичушкин', victims: 48,
+                dates: 'р. 09.04.1974', epitaph: 'Битцевский маньяк',
+                description: `Александр Пичушкин, прозванный «Битцевским маньяком», совершал убийства в московском Битцевском парке с 1992 по 2006 год. Он мечтал заполнить жертвами все 64 клетки шахматной доски и признался в 48 убийствах, хотя сам утверждал, что убил не менее 60 человек. Орудием преступлений чаще всего становился молоток, а тела он сбрасывал в канализационные колодцы. В 2007 году суд приговорил его к пожизненному лишению свободы.`,
+                portrait: 'пичушкин.jpg'
+            },
+            {
+                id: 3, type: 'maniac', name: 'Михаил Попков', victims: 78,
+                dates: 'р. 07.03.1964', epitaph: 'Ангарский маньяк',
+                description: `Михаил Попков — российский серийный убийца и бывший милиционер, известный как «Ангарский маньяк». С 1992 по 2010 год он совершил не менее 78 убийств, преимущественно женщин, предлагая им подвезти на машине, после чего жестоко расправлялся с ними в окрестностях Ангарска. Его долго не могли вычислить, так как он сам участвовал в розыске «маньяка» и пользовался доверием коллег. В 2015 и 2018 годах Попков был приговорён к пожизненному заключению, став одним из самых массовых убийц в истории России.`,
+                portrait: 'попков.jpg'
+            },
+            {
+                id: 4, type: 'maniac', name: 'Тед Банди', victims: 30,
+                dates: '24.11.1946 — 24.01.1989', epitaph: 'Убийца студенток',
+                description: `Тед Банди — американский серийный убийца, некрофил и похититель, действовавший в 1970-х годах. Он заманивал молодых женщин и девушек, используя свою привлекательную внешность, обаяние и притворяясь раненым или нуждающимся в помощи. Банди признался в 30 убийствах, хотя истинное число жертв может быть значительно больше, и совершил два дерзких побега из тюрьмы. В 1989 году он был казнён на электрическом стуле во Флориде, став одним из самых скандальных и изучаемых преступников в истории криминалистики.`,
+                portrait: 'банди.jpg'
+            },
+            {
+                id: 5, type: 'maniac', name: 'Гарольд Шипман', victims: 215,
+                dates: '14.01.1946 — 13.01.2004', epitaph: 'Доктор Смерть',
+                description: `Гарольд Шипман — британский врач, признанный одним из самых массовых серийных убийц в истории. Под видом медицинской помощи он вводил своим пациентам, в основном пожилым женщинам, смертельные инъекции героина, а затем подделывал их завещания. Официально доказано 215 убийств, но общее число его жертв может достигать 250 человек. В 2000 году Шипман был приговорён к пожизненному заключению, а в 2004 году покончил с собой в тюремной камере.`,
+                portrait: 'шипман.jpg'
+            },
+            {
+                id: 6, type: 'maniac', name: 'Луис Альфредо Гаравито', victims: 140,
+                dates: 'р. 25.01.1957', epitaph: 'La Bestia',
+                description: `Луис Альфредо Гаравито, известный как «Зверь» (La Bestia), — колумбийский серийный убийца и насильник, жертвами которого становились мальчики от 6 до 16 лет. В 1990-х годах он признался в убийстве около 140 детей, заманивая их обманом, после чего жестоко истязал, насиловал и оставлял тела в безлюдных местах. В 1999 году он был арестован и приговорён к 22 годам тюрьмы, что вызвало волну возмущения из-за несоразмерности наказания. Позднее к его приговору добавили новые сроки, и Гаравито остаётся в колумбийской тюрьме, будучи признанным мировым рекордсменом по количеству жертв среди серийных убийц.`,
+                portrait: 'аравито.jpg'
+            },
+            {
+                id: 7, type: 'disaster', name: 'Бхопальская катастрофа', victims: 3787,
+                dates: '03.12.1984', epitaph: 'Токсичное облако',
+                description: `В ночь на 3 декабря 1984 года на химическом заводе компании Union Carbide в индийском городе Бхопал произошла утечка около 40 тонн токсичного газа метилизоцианата. Ядовитое облако накрыло густонаселённые трущобы, вызвав мгновенную гибель людей от удушья и отравления. Официально погибло около 3,8 тысячи человек, однако общее число жертв с учётом отдалённых последствий оценивается в 15–20 тысяч, а сотни тысяч получили хронические заболевания. Бхопальская катастрофа считается самой смертоносной техногенной аварией в истории человечества, а вопросы компенсации и очистки территории не урегулированы до сих пор.`,
+                portrait: 'бхопальская катастрофа.jpg'
+            },
+            {
+                id: 8, type: 'disaster', name: 'Чернобыль', victims: 31,
+                dates: '26.04.1986', epitaph: 'Взрыв реактора',
+                description: `26 апреля 1986 года на четвёртом энергоблоке Чернобыльской АЭС в ходе проектного испытания произошёл взрыв пароводяного и теплового характера, полностью разрушивший активную зону реактора. В атмосферу было выброшено огромное количество радиоактивных веществ, что привело к загрязнению обширных территорий СССР и Европы. Ближайший город Припять и 30-километровая зона вокруг станции были эвакуированы, а ликвидация последствий стоила жизни десяткам пожарных и работников станции от острой лучевой болезни. Чернобыльская авария стала крупнейшей техногенной катастрофой в истории ядерной энергетики и повлияла на пересмотр стандартов безопасности во всём мире.`,
+                portrait: 'чернобыль.jpg'
+            },
+            {
+                id: 9, type: 'disaster', name: 'Титаник', victims: 1514,
+                dates: '15.04.1912', epitaph: 'Непотопляемый',
+                description: `«Титаник» — британский трансатлантический лайнер, считавшийся непотопляемым, затонул в Северной Атлантике 15 апреля 1912 года в своё первое плавание. Столкновение с айсбергом в 23:40 привело к затоплению пяти из шестнадцати водонепроницаемых отсеков, чего оказалось достаточно, чтобы судно ушло под воду за 2 часа 40 минут. Из-за нехватки спасательных шлюпок из примерно 2200 человек на борту погибло около 1500, в основном от переохлаждения в ледяной воде. Гибель «Титаника» стала одной из самых известных морских катастроф в истории и привела к ужесточению международных правил безопасности судоходства.`,
+                portrait: 'титаник.jpg'
+            },
+            {
+                id: 10, type: 'disaster', name: 'Теракт 11 сентября', victims: 2996,
+                dates: '11.09.2001', epitaph: '9/11',
+                description: `11 сентября 2001 года террористы-смертники «Аль-Каиды» захватили четыре пассажирских авиалайнера, превратив их в управляемые ракеты. Два самолёта врезались в башни-близнецы Всемирного торгового центра в Нью-Йорке, третий — в здание Пентагона, а четвёртый упал в поле в Пенсильвании после попытки пассажиров обезвредить захватчиков. В результате атак погибло почти 3000 человек, а обе 110-этажные башни полностью обрушились в течение двух часов, вызвав масштабные разрушения. Теракт 11 сентября стал крупнейшим в истории по числу жертв и кардинально изменил мировую политику, став началом «войны с террором».`,
+                portrait: '911.jpg'
+            },
+            {
+                id: 11, type: 'disaster', name: 'Обрушение ТЦ «Сампхун»', victims: 502,
+                dates: '29.06.1995', epitaph: 'Рухнувший центр',
+                description: `29 июня 1995 года пятиэтажный торговый центр «Сампхун» в Сеуле рухнул всего за 20 секунд, погребя под обломками сотни посетителей. Причиной катастрофы стали грубые нарушения при строительстве: несанкционированные перестройки, отказ от несущих колонн и использование ослабленных конструкций ради увеличения торговых площадей. Погибли 502 человека, ещё более 900 получили ранения, что сделало это обрушение крупнейшей по жертвам техногенной катастрофой в истории Южной Кореи. Трагедия привела к волне арестов владельцев и чиновников, а также к масштабным проверкам безопасности зданий по всей стране.`,
+                portrait: 'сампхун.jpg'
+            },
+            {
+                id: 12, type: 'disaster', name: 'Теракт в Беслане', victims: 334,
+                dates: '01.09.2004', epitaph: 'Школа №1',
+                description: `1 сентября 2004 года вооружённые боевики захватили школу №1 в осетинском городе Беслан, взяв в заложники более 1100 человек, большинство из которых составляли дети и их родители. Террористы удерживали людей в заминированном спортзале без еды и воды в течение трёх дней, требуя вывода российских войск из Чечни. На третий день в здании произошли взрывы и начался спонтанный штурм, в ходе которого погибло 334 заложника, из них 186 детей. Бесланская трагедия стала одним из самых жестоких терактов в истории Европы, вызвав глубокий национальный шок и пересмотр антитеррористической политики в России.`,
+                portrait: 'бесланмемориал.jpg'
+            }
+        ];
+
+        // SVG могильной плиты
+        const graveSVG = `
+            <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="16" height="24" rx="6" ry="6" fill="none" stroke="#fff" stroke-width="1.5"/>
+                <line x1="12" y1="10" x2="12" y2="24" stroke="#fff" stroke-width="1.5"/>
+                <line x1="6" y1="16" x2="18" y2="16" stroke="#fff" stroke-width="1.5"/>
+            </svg>
+        `;
+        const miniGraveSVG = `
+            <svg viewBox="0 0 16 22" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="12" height="18" rx="4" ry="4" fill="none" stroke="#fff" stroke-width="1.2"/>
+                <line x1="8" y1="6" x2="8" y2="16" stroke="#fff" stroke-width="1.2"/>
+                <line x1="4" y1="10" x2="12" y2="10" stroke="#fff" stroke-width="1.2"/>
+            </svg>
+        `;
+
+        // DOM-элементы
+        const maniacsGrid = document.getElementById('maniacsGrid');
+        const disastersGrid = document.getElementById('disastersGrid');
+        const totalVictimsSpan = document.getElementById('totalVictims');
+        const overlay = document.getElementById('overlay');
+        const closeOverlayBtn = document.getElementById('closeOverlay');
+        const detailPortrait = document.getElementById('detailPortrait');
+        const detailName = document.getElementById('detailName');
+        const detailDates = document.getElementById('detailDates');
+        const graveContainer = document.getElementById('graveContainer');
+        const detailEpitaph = document.getElementById('detailEpitaph');
+        const detailDescription = document.getElementById('detailDescription');
+
+        function buildMainPage() {
+            const maniacs = graves.filter(g => g.type === 'maniac');
+            const disasters = graves.filter(g => g.type === 'disaster');
+            let totalVictims = 0;
+
+            const renderCards = (array, container) => {
+                array.forEach(grave => {
+                    totalVictims += grave.victims;
+                    const card = document.createElement('div');
+                    card.className = 'plot-card';
+                    card.addEventListener('click', () => openDetail(grave));
+
+                    let miniGravesHTML = '';
+                    const previewCount = Math.min(grave.victims, 20);
+                    for (let i = 0; i < previewCount; i++) {
+                        miniGravesHTML += `<span class="mini-grave">${miniGraveSVG}</span>`;
+                    }
+                    if (grave.victims > 20) {
+                        miniGravesHTML += `<span style="color:#666; margin-left:5px;">+${grave.victims - 20}</span>`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="mini-graves">${miniGravesHTML}</div>
+                        <div class="plot-name">${grave.name}</div>
+                        <div class="plot-victims">${grave.victims} жертв</div>
+                        <div class="plot-type">${grave.type === 'maniac' ? 'МАНЬЯК' : 'КАТАСТРОФА'}</div>
+                    `;
+                    container.appendChild(card);
+                });
+            };
+
+            renderCards(maniacs, maniacsGrid);
+            renderCards(disasters, disastersGrid);
+            totalVictimsSpan.textContent = totalVictims;
+        }
+
+        function openDetail(grave) {
+            detailPortrait.src = grave.portrait;
+            detailPortrait.onerror = function() {
+                this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150"%3E%3Crect width="150" height="150" fill="%231a1a1a"/%3E%3Ctext x="50%25" y="50%25" fill="%23555" font-family="monospace" text-anchor="middle" dy=".3em" font-size="12"%3EНЕТ ФОТО%3C/text%3E%3C/svg%3E';
+            };
+            detailName.textContent = grave.name;
+            detailDates.textContent = grave.dates;
+            detailEpitaph.textContent = grave.epitaph;
+            detailDescription.textContent = grave.description;
+
+            graveContainer.innerHTML = '';
+            const victims = grave.victims;
+            const maxGravesDisplay = 200;
+            const gravesToShow = Math.min(victims, maxGravesDisplay);
+
+            for (let i = 0; i < gravesToShow; i++) {
+                const graveDiv = document.createElement('div');
+                graveDiv.className = 'grave';
+                graveDiv.innerHTML = graveSVG;
+                graveDiv.style.animationDelay = `${i * 0.015}s`;
+                graveContainer.appendChild(graveDiv);
+            }
+
+            if (victims > maxGravesDisplay) {
+                const extra = document.createElement('div');
+                extra.style.cssText = 'grid-column: 1 / -1; text-align: center; color: #666; margin-top: 10px;';
+                extra.textContent = `... и ещё ${victims - maxGravesDisplay} жертв`;
+                graveContainer.appendChild(extra);
+            }
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            overlay.scrollTop = 0;
+        }
+
+        function closeDetail() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeOverlayBtn.addEventListener('click', closeDetail);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeDetail();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeDetail();
+            }
+        });
+    </script>
+</body>
+</html>
